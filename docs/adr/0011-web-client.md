@@ -29,8 +29,8 @@ experience is bad.
   enters the queue, **not when it is sent**. So a resend always uses the same id.
 - The web app calls the API through **Next `rewrites`** (`/api/*` → API). Same origin in the browser,
   so no CORS setup.
-- The web app imports **types** and the **schema** from the core, not the decision logic. The server
-  always decides.
+- The web app imports only **types** from the core (`import type`), never the decision logic. The
+  server always decides.
 
 ### The offline queue
 

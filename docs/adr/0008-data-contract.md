@@ -8,9 +8,8 @@
 Both ends of an operation need a well-defined shape:
 
 - **Input**: R5 says fields are checked **before** any processing, and an invalid operation does not
-  take the `opId`. Validation is therefore a **business rule**: it belongs in the core, is tested with
-  the other rules and serves both the API and the web app. TypeScript types do not exist at runtime
-  ([ADR 0001](0001-stack.md)).
+  take the `opId`. Validation is therefore a **business rule**: it belongs in the core and is tested
+  with the other rules. TypeScript types do not exist at runtime ([ADR 0001](0001-stack.md)).
 - **Output**: each operation produces exactly one result (R9). Conflict, invalid operation and
   `id_reused` are **expected outcomes** of the protocol, not system failures. The format must serve
   the core, the API and the simulator, and make it impossible to forget a case.
