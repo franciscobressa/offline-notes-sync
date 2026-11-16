@@ -4,6 +4,15 @@ import type {
 } from "../../application/sync-store.js";
 import type { Note, Receipt } from "../../domain/types.js";
 
+/**
+ * Reference adapter with no dependencies (ADR 0002, 0009).
+ *
+ * - Transactions are serialized by a promise-chain mutex: with async/await, two
+ *   requests could otherwise interleave at every `await`, even on one thread.
+ * - Writes are staged and only copied to the committed maps if the work resolves,
+ *   so a thrown error rolls everything back.
+ * - Every value crossing the boundary is cloned, so callers can't mutate stored state.
+ */
 export class InMemorySyncStore implements SyncStore {
   readonly #notes = new Map<string, Note>();
   readonly #receipts = new Map<string, Receipt>();
