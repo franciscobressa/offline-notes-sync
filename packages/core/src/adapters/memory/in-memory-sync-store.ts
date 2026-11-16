@@ -1,15 +1,9 @@
-import type { SyncStore, SyncTransaction } from '../../application/sync-store.js';
-import type { Note, Receipt } from '../../domain/types.js';
+import type {
+  SyncStore,
+  SyncTransaction,
+} from "../../application/sync-store.js";
+import type { Note, Receipt } from "../../domain/types.js";
 
-/**
- * Reference adapter with no dependencies (ADR 0002, 0009).
- *
- * - Transactions are serialized by a promise-chain mutex: with async/await, two
- *   requests could otherwise interleave at every `await`, even on one thread.
- * - Writes are staged and only copied to the committed maps if the work resolves,
- *   so a thrown error rolls everything back.
- * - Every value crossing the boundary is cloned, so callers can't mutate stored state.
- */
 export class InMemorySyncStore implements SyncStore {
   readonly #notes = new Map<string, Note>();
   readonly #receipts = new Map<string, Receipt>();
@@ -35,9 +29,10 @@ export class InMemorySyncStore implements SyncStore {
     let open = true;
 
     const ensureOpen = (): void => {
-      if (!open) throw new Error('Transaction already finished');
+      if (!open) throw new Error("Transaction already finished");
     };
-    const currentNote = (id: string): Note | undefined => stagedNotes.get(id) ?? this.#notes.get(id);
+    const currentNote = (id: string): Note | undefined =>
+      stagedNotes.get(id) ?? this.#notes.get(id);
     const currentReceipt = (opId: string): Receipt | undefined =>
       stagedReceipts.get(opId) ?? this.#receipts.get(opId);
 
@@ -74,7 +69,8 @@ export class InMemorySyncStore implements SyncStore {
       const result = await work(tx);
       // Commit: synchronous, so no reader can observe a half-applied transaction.
       for (const [id, note] of stagedNotes) this.#notes.set(id, note);
-      for (const [opId, receipt] of stagedReceipts) this.#receipts.set(opId, receipt);
+      for (const [opId, receipt] of stagedReceipts)
+        this.#receipts.set(opId, receipt);
       return result;
     } finally {
       open = false;
