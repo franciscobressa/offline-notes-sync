@@ -4,8 +4,8 @@ Solution to **Case 05: Offline note sync**.
 
 - **Chosen focus**: architecture and system design (back end), with a web simulator for the demo.
 - **Stack**: TypeScript, NestJS and Next.js, in an npm workspaces monorepo. Everything in memory.
-- **Time spent**: _TBD_.
-- **Video**: _TBD_.
+- **Time spent**: about 6 hours.
+- **Video**: https://www.youtube.com/watch?v=vHWs8ugR4_Y
 
 Devices edit notes offline and sync later. The server accepts safe edits, returns a **conflict**
 instead of overwriting work, and turns **resends** into responses identical to the original ones,
